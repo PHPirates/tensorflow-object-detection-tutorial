@@ -1,18 +1,19 @@
 """ https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/camera.html """
 
-import numpy as np
 import os
-import six.moves.urllib as urllib
 import sys
 import tarfile
-import tensorflow as tf
-import zipfile
-import cv2
 
-from collections import defaultdict
-from io import StringIO
-from matplotlib import pyplot as plt
-from PIL import Image
+# Add object_detection folder of tensorflow to path
+sys.path.insert(0, 'C:/Users/s156757/GitRepos/tensorflow-models/research/slim')
+sys.path.insert(0, 'C:/Users/s156757/GitRepos/tensorflow-models/research')
+sys.path.insert(0, 'C:/Users/s156757/GitRepos/tensorflow-models/research/object_detection')
+sys.path.insert(0, 'C:/Users/s156757/GitRepos/tensorflow-models/research/object_detection/utils')
+
+import cv2
+import numpy as np
+import six.moves.urllib as urllib
+import tensorflow as tf
 from utils import label_map_util
 from utils import visualization_utils as vis_util
 
@@ -43,7 +44,6 @@ for file in tar_file.getmembers():
     if 'frozen_inference_graph.pb' in file_name:
         tar_file.extract(file, os.getcwd())
 
-
 # Load a (frozen) Tensorflow model into memory.
 detection_graph = tf.Graph()
 with detection_graph.as_default():
@@ -52,7 +52,6 @@ with detection_graph.as_default():
         serialized_graph = fid.read()
         od_graph_def.ParseFromString(serialized_graph)
         tf.import_graph_def(od_graph_def, name='')
-
 
 # Loading label map
 # Label maps map indices to category names, so that when our convolution network predicts `5`, we know that this corresponds to `airplane`.  Here we use internal utility functions, but anything that returns a dictionary mapping integers to appropriate string labels would be fine
