@@ -1,14 +1,7 @@
 """ https://tensorflow-object-detection-api-tutorial.readthedocs.io/en/latest/camera.html """
 
 import os
-import sys
 import tarfile
-
-# Add object_detection folder of tensorflow to path
-sys.path.insert(0, 'C:/Users/s156757/GitRepos/tensorflow-models/research/slim')
-sys.path.insert(0, 'C:/Users/s156757/GitRepos/tensorflow-models/research')
-sys.path.insert(0, 'C:/Users/s156757/GitRepos/tensorflow-models/research/object_detection')
-sys.path.insert(0, 'C:/Users/s156757/GitRepos/tensorflow-models/research/object_detection/utils')
 
 import cv2
 import numpy as np
