@@ -13,14 +13,19 @@ from utils import visualization_utils as vis_util
 # Define the video stream
 cap = cv2.VideoCapture(0)  # Change only if you have more than one webcams
 
+# Location of this python file, necessary to use when the working directory is somewhere else
+BASE_PATH = os.path.dirname(os.path.realpath(__file__)) + "\\"
+
 # What model to download.
-# Models can bee found here: https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
+# Models can bee found here:
+# https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 MODEL_NAME = 'ssd_inception_v2_coco_2017_11_17'
 MODEL_FILE = MODEL_NAME + '.tar.gz'
+MODEL_PATH = BASE_PATH + MODEL_FILE
 DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
 
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
-PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
+PATH_TO_CKPT = BASE_PATH + MODEL_NAME + '/frozen_inference_graph.pb'
 
 # List of the strings that is used to add correct label for each box.
 PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
@@ -28,14 +33,15 @@ PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
 # Number of classes to detect
 NUM_CLASSES = 90
 
-# Download Model
-opener = urllib.request.URLopener()
-opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
-tar_file = tarfile.open(MODEL_FILE)
-for file in tar_file.getmembers():
-    file_name = os.path.basename(file.name)
-    if 'frozen_inference_graph.pb' in file_name:
-        tar_file.extract(file, os.getcwd())
+# Download Model if it doesn't exist todo test
+if not os.path.isfile(PATH_TO_CKPT):
+    opener = urllib.request.URLopener()
+    opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
+    tar_file = tarfile.open(MODEL_PATH)
+    for file in tar_file.getmembers():
+        file_name = os.path.basename(file.name)
+        if 'frozen_inference_graph.pb' in file_name:
+            tar_file.extract(file, BASE_PATH)
 
 # Load a (frozen) Tensorflow model into memory.
 detection_graph = tf.Graph()
@@ -46,8 +52,9 @@ with detection_graph.as_default():
         od_graph_def.ParseFromString(serialized_graph)
         tf.import_graph_def(od_graph_def, name='')
 
-# Loading label map
-# Label maps map indices to category names, so that when our convolution network predicts `5`, we know that this corresponds to `airplane`.  Here we use internal utility functions, but anything that returns a dictionary mapping integers to appropriate string labels would be fine
+# Loading label map Label maps map indices to category names, so that when our convolution network predicts `5`,
+# we know that this corresponds to `airplane`.  Here we use internal utility functions, but anything that returns a
+# dictionary mapping integers to appropriate string labels would be fine
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 categories = label_map_util.convert_label_map_to_categories(
     label_map, max_num_classes=NUM_CLASSES, use_display_name=True)

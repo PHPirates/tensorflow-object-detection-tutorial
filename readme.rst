@@ -5,3 +5,4 @@ Steps to run:
 #. Follow the installation part of the tutorial.
 #. Make sure you have a virtual environment with the packages from `requirements.txt` installed.
 #. If it doesn't exist yet, create an environment variable `PYTHONPATH` with value `C:/path/to/tensorflow/models/research;C:/path/to/tensorflow/models/research/object_detection`
+#. Reboot.
