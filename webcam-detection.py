@@ -35,6 +35,7 @@ NUM_CLASSES = 90
 
 # Download Model if it doesn't exist todo test
 if not os.path.isfile(PATH_TO_CKPT):
+    print('Downloading model...')
     opener = urllib.request.URLopener()
     opener.retrieve(DOWNLOAD_BASE + MODEL_FILE, MODEL_FILE)
     tar_file = tarfile.open(MODEL_PATH)
@@ -42,8 +43,10 @@ if not os.path.isfile(PATH_TO_CKPT):
         file_name = os.path.basename(file.name)
         if 'frozen_inference_graph.pb' in file_name:
             tar_file.extract(file, BASE_PATH)
+    print('Downloading finished.')
 
 # Load a (frozen) Tensorflow model into memory.
+print("Loading the model into memory...")
 detection_graph = tf.Graph()
 with detection_graph.as_default():
     od_graph_def = tf.GraphDef()
@@ -69,6 +72,7 @@ def load_image_into_numpy_array(image):
 
 
 # Detection
+print('Starting up detection window...')
 with detection_graph.as_default():
     with tf.Session(graph=detection_graph) as sess:
         while True:
